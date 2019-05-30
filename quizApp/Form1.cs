@@ -35,6 +35,7 @@ namespace quizApp
 
         public string path;
         List<RootObject> items;
+        int index = 0;
         public void button1_Click(object sender, EventArgs e)
         {
             OpenFileDialog file = new OpenFileDialog();
@@ -50,14 +51,62 @@ namespace quizApp
                 items = JsonConvert.DeserializeObject<List<RootObject>>(json);
             }
 
-            foreach (var pytanie in items)
-            {
-                Console.WriteLine(pytanie.Text);
-                foreach(var odpowiedz in pytanie.Answers)
-                {
-                    Console.WriteLine("Punkty: {0}, waga: {1}",odpowiedz.AnswerKind.ToString(),odpowiedz.Points);
+            //foreach (var pytanie in items)
+            //{
+            //    Console.WriteLine(pytanie.Text);
+            //    foreach (var odpowiedz in pytanie.Answers)
+            //    {
+            //        Console.WriteLine("Punkty: {0}, waga: {1}", odpowiedz.AnswerKind.ToString(), odpowiedz.Points);
 
-                }
+            //    }
+            //}
+            //for (int i = 0; i < items.Count(); i++)
+            //{
+            //    Console.WriteLine(items[i].Text);
+            //    for (int j = 0; j < items[i].Answers.Count(); j++)
+            //    {
+            //        Console.WriteLine("Punkty: {0}, waga: {1}, pytanie: {2}",
+            //            items[i].Answers[j].AnswerKind.ToString(), items[i].Answers[j].Points, items[i].Answers[j].Text);
+
+            //    }
+            //}
+
+            button2.Enabled = true;
+            LoadNextQuestion(0);
+            
+        }
+        private void LoadNextQuestion(int i)
+        {
+            label1.Text = items[i].Text;
+            label2.Text = String.Format("{0}/{1}", index + 1, items.Count());
+            checkBox1.Text = items[i].Answers[0].Text;
+            checkBox2.Text = items[i].Answers[1].Text;
+            checkBox3.Text = items[i].Answers[2].Text;
+            checkBox4.Text = items[i].Answers[3].Text;
+
+            if ( index <= items.Count())
+            {
+                index += 1;
+            }
+            
+        }
+
+        private void UpdateScore()
+        {
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            UpdateScore();
+
+            if(index < items.Count())
+            {
+                LoadNextQuestion(index);
+            }
+            else
+            {
+                MessageBox.Show("Koniec");
             }
         }
     }
