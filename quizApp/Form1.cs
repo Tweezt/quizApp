@@ -16,5 +16,16 @@ namespace quizApp
         {
             InitializeComponent();
         }
+
+        private string path;
+        private void button1_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog file = new OpenFileDialog();
+            if (file.ShowDialog() == DialogResult.OK)
+            {
+                path = file.FileName;
+            }
+            textBox1.Text = path;
+        }
     }
 }
