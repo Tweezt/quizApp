@@ -46,11 +46,7 @@ namespace quizApp
             }
             textBox1.Text = path;
 
-            using (StreamReader r = new StreamReader(path))
-            {
-                string json = r.ReadToEnd();
-                items = JsonConvert.DeserializeObject<List<RootObject>>(json);
-            }
+            
 
             //foreach (var pytanie in items)
             //{
@@ -72,18 +68,25 @@ namespace quizApp
             //    }
             //}
 
-            button2.Enabled = true;
-            LoadNextQuestion(0);
+            
             
         }
         private void LoadNextQuestion(int i)
         {
             label1.Text = items[i].Text;
             label2.Text = String.Format("{0}/{1}", index + 1, items.Count());
+
             checkBox1.Text = items[i].Answers[0].Text;
+            checkBox1.Checked = false;
+
             checkBox2.Text = items[i].Answers[1].Text;
+            checkBox2.Checked = false;
+
             checkBox3.Text = items[i].Answers[2].Text;
+            checkBox3.Checked = false;
+
             checkBox4.Text = items[i].Answers[3].Text;
+            checkBox4.Checked = false;
 
             if ( index <= items.Count())
             {
@@ -92,15 +95,39 @@ namespace quizApp
             
         }
 
-        private int UpdateScore()
+        private int UpdateScore() //TODO make a loop with OfType
         {
             int currentScore = 0;
-            if (checkBox1.Checked && items[index-1].Answers[0].AnswerKind == 1) currentScore += items[index-1].Answers[0].Points; //TODO make a loop with OfType
-            if (checkBox2.Checked && items[index-1].Answers[1].AnswerKind == 1) currentScore += items[index-1].Answers[1].Points;
-            if (checkBox3.Checked && items[index-1].Answers[2].AnswerKind == 1) currentScore += items[index-1].Answers[2].Points;
-            if (checkBox4.Checked && items[index-1].Answers[3].AnswerKind == 1) currentScore += items[index-1].Answers[3].Points;
+            if (checkBox1.Checked && items[index-1].Answers[0].AnswerKind == 1)
+            {
+                currentScore += items[index-1].Answers[0].Points; 
+                if (currentScore < 0) return currentScore;
+            }
 
-            Console.WriteLine(currentScore);
+            if (checkBox2.Checked && items[index-1].Answers[1].AnswerKind == 1)
+            {
+                currentScore += items[index-1].Answers[1].Points;
+                if (currentScore < 0) return currentScore;
+            }
+
+            if (checkBox3.Checked && items[index-1].Answers[2].AnswerKind == 1)
+            {
+                currentScore += items[index-1].Answers[2].Points;
+                if (currentScore < 0) return currentScore;
+            }
+
+            if (checkBox4.Checked && items[index-1].Answers[3].AnswerKind == 1)
+            {
+                currentScore += items[index-1].Answers[3].Points;
+                if (currentScore < 0) return currentScore;
+            }
+
+            if (checkBox1.Checked && items[index - 1].Answers[0].AnswerKind == 0) currentScore = 0;
+            if (checkBox2.Checked && items[index - 1].Answers[1].AnswerKind == 0) currentScore = 0;
+            if (checkBox3.Checked && items[index - 1].Answers[2].AnswerKind == 0) currentScore = 0;
+            if (checkBox4.Checked && items[index - 1].Answers[3].AnswerKind == 0) currentScore = 0;
+
+            //Console.WriteLine(currentScore);
             return currentScore;
         }
 
@@ -114,9 +141,26 @@ namespace quizApp
             }
             else
             {
+                if(wynik<0)
+                {
+                    MessageBox.Show(String.Format("Koniec. Udzieliłeś odpowiedzi kardynalnej.\nProsimy nie strzelać!", wynik.ToString()));
+                    System.Windows.Forms.Application.Exit();
+                }
                 MessageBox.Show(String.Format("Koniec. Twój wynik: {0}", wynik.ToString()));
                 System.Windows.Forms.Application.Exit();
             }
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            using (StreamReader r = new StreamReader(path))
+            {
+                string json = r.ReadToEnd();
+                items = JsonConvert.DeserializeObject<List<RootObject>>(json);
+            }
+
+            button2.Enabled = true;
+            LoadNextQuestion(0);
         }
     }
 }
