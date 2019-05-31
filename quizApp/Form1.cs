@@ -33,11 +33,11 @@ namespace quizApp
         }
 
 
-        public string path;
-        List<RootObject> items;
-        int index = 0;
-        int wynik = 0;
-        public void button1_Click(object sender, EventArgs e)
+        private string path;
+        private List<RootObject> items;
+        private int index = 0;
+        private int wynik = 0;
+        private void button1_Click(object sender, EventArgs e)
         {
             OpenFileDialog file = new OpenFileDialog();
             if (file.ShowDialog() == DialogResult.OK)
@@ -76,15 +76,19 @@ namespace quizApp
             label1.Text = items[i].Text;
             label2.Text = String.Format("{0}/{1}", index + 1, items.Count());
 
+            checkBox1.Enabled = true;
             checkBox1.Text = items[i].Answers[0].Text;
             checkBox1.Checked = false;
 
+            checkBox2.Enabled = true;
             checkBox2.Text = items[i].Answers[1].Text;
             checkBox2.Checked = false;
 
+            checkBox3.Enabled = true;
             checkBox3.Text = items[i].Answers[2].Text;
             checkBox3.Checked = false;
 
+            checkBox4.Enabled = true;
             checkBox4.Text = items[i].Answers[3].Text;
             checkBox4.Checked = false;
 
@@ -161,6 +165,84 @@ namespace quizApp
 
             button2.Enabled = true;
             LoadNextQuestion(0);
+        }
+
+        private int SumOfAnswerKind()
+        {
+            int sum = 0;
+            for (int m = 0; m < 4; m++)
+                sum += items[index - 1].Answers[m].AnswerKind;
+
+            Console.WriteLine(sum);
+            return sum;
+        }
+
+        private void checkBox1_Click(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked)
+                if(SumOfAnswerKind() == 1)
+            {
+                checkBox2.Enabled = false;
+                checkBox3.Enabled = false;
+                checkBox4.Enabled = false;
+            }
+            if (!checkBox1.Checked)
+            {
+                checkBox2.Enabled = true;
+                checkBox3.Enabled = true;
+                checkBox4.Enabled = true;
+            }
+        }
+
+        private void checkBox2_Click(object sender, EventArgs e)
+        {
+            if (checkBox2.Checked)
+                if (SumOfAnswerKind() == 1)
+                {
+                    checkBox1.Enabled = false;
+                    checkBox3.Enabled = false;
+                    checkBox4.Enabled = false;
+                }
+            if (!checkBox2.Checked)
+            {
+                checkBox1.Enabled = true;
+                checkBox3.Enabled = true;
+                checkBox4.Enabled = true;
+            }
+        }
+
+        private void checkBox3_Click(object sender, EventArgs e)
+        {
+            if (checkBox3.Checked)
+                if (SumOfAnswerKind() == 1)
+                {
+                    checkBox1.Enabled = false;
+                    checkBox2.Enabled = false;
+                    checkBox4.Enabled = false;
+                }
+            if (!checkBox3.Checked)
+            {
+                checkBox1.Enabled = true;
+                checkBox2.Enabled = true;
+                checkBox4.Enabled = true;
+            }
+        }
+
+        private void checkBox4_Click(object sender, EventArgs e)
+        {
+            if (checkBox4.Checked)
+                if (SumOfAnswerKind() == 1)
+                {
+                    checkBox1.Enabled = false;
+                    checkBox2.Enabled = false;
+                    checkBox3.Enabled = false;
+                }
+            if (!checkBox4.Checked)
+            {
+                checkBox1.Enabled = true;
+                checkBox2.Enabled = true;
+                checkBox3.Enabled = true;
+            }
         }
     }
 }
