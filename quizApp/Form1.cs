@@ -36,6 +36,7 @@ namespace quizApp
         public string path;
         List<RootObject> items;
         int index = 0;
+        int wynik = 0;
         public void button1_Click(object sender, EventArgs e)
         {
             OpenFileDialog file = new OpenFileDialog();
@@ -91,14 +92,21 @@ namespace quizApp
             
         }
 
-        private void UpdateScore()
+        private int UpdateScore()
         {
+            int currentScore = 0;
+            if (checkBox1.Checked && items[index-1].Answers[0].AnswerKind == 1) currentScore += items[index-1].Answers[0].Points; //TODO make a loop with OfType
+            if (checkBox2.Checked && items[index-1].Answers[1].AnswerKind == 1) currentScore += items[index-1].Answers[1].Points;
+            if (checkBox3.Checked && items[index-1].Answers[2].AnswerKind == 1) currentScore += items[index-1].Answers[2].Points;
+            if (checkBox4.Checked && items[index-1].Answers[3].AnswerKind == 1) currentScore += items[index-1].Answers[3].Points;
 
+            Console.WriteLine(currentScore);
+            return currentScore;
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            UpdateScore();
+            wynik += UpdateScore();
 
             if(index < items.Count())
             {
@@ -106,7 +114,8 @@ namespace quizApp
             }
             else
             {
-                MessageBox.Show("Koniec");
+                MessageBox.Show(String.Format("Koniec. Twój wynik: {0}", wynik.ToString()));
+                System.Windows.Forms.Application.Exit();
             }
         }
     }
